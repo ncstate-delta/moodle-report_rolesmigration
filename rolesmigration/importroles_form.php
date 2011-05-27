@@ -17,7 +17,7 @@
 /**
  * The form for step one of the Import Roles process.
  * @package   moodlerolesmigration
- * @copyright 2011 NCSU DELTA | Developed by Glenn Ansley <glenn_ansley@ncsu.edu>
+ * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -18,7 +18,7 @@
 /**
  * Strings for component 'report_rolesmigration', language 'en', branch 'MOODLE_20_STABLE'
  * @package   moodlerolesmigration
- * @copyright 2011 NCSU DELTA | Developed by Glenn Ansley <glenn_ansley@ncsu.edu>
+ * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['do_not_import']            = 'Do not import';
