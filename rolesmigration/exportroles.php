@@ -21,7 +21,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../../config.php');
+//require_once('../../../config.php');
+require_once('/Applications/MAMP/htdocs/moodle20/config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once(dirname(__FILE__) . '/exportroles_form.php');
 

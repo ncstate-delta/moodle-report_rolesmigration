@@ -36,11 +36,13 @@ if ($roles_in_file = roles_migration_get_incoming_roles()) {
                 if (!array_key_exists($role->shortname, $_POST['to_create'])) {
                     print_error('new_shortname_undefined');
                 }
-                $new_role = $_POST['to_create'][$role->shortname];
+                $new_role_shortname = textlib_get_instance()->specialtoascii($_POST['to_create'][$role->shortname]['shortname']);
+                $new_role_shortname = moodle_strtolower(clean_param($new_role_shortname, PARAM_ALPHANUMEXT));
+                $new_role_name = $_POST['to_create'][$role->shortname]['name'];
 
                 // code to make new role name/short name if same role name or shortname exists
-                $fullname = $role->name;
-                $shortname = $role->shortname;
+                $fullname = $new_role_name;
+                $shortname = $new_role_shortname;
                 $currentfullname = "";
                 $currentshortname = "";
                 $counter = 0;
@@ -56,13 +58,13 @@ if ($roles_in_file = roles_migration_get_incoming_roles()) {
                 $currentfullname = $fullname.$suffixfull;
                 // Limit the size of shortname - database column accepts <= 100 chars
                 $currentshortname = substr($shortname, 0, 100 - strlen($suffixshort)).$suffixshort;
-                $coursefull  = $DB->get_record("role", array("name" => addslashes($currentfullname)));
-                $courseshort = $DB->get_record("role", array("shortname" => addslashes($currentshortname)));
+                $coursefull  = $DB->get_record("role", array("name" => $currentfullname));
+                $courseshort = $DB->get_record("role", array("shortname" => $currentshortname));
                 $counter++;
                 } while ($coursefull || $courseshort);
 
                 // done finding a unique name
-                $role_id = create_role(addslashes($currentfullname), $new_role, $role->description, $role->archetype);
+                $role_id = create_role($currentfullname, $currentshortname, $role->description, $role->archetype);
 
                 // Loop through incoming capabilities
                 foreach ($role->capabilities as $capability) {
@@ -81,8 +83,10 @@ if ($roles_in_file = roles_migration_get_incoming_roles()) {
 
                 // Prep values for string and send to screen
                 $r = new object;
-                $r->new = $new_role;
-                $r->old = $role->shortname;
+                $r->newshort = $currentshortname;
+                $r->newname = $currentfullname;
+                $r->oldshort = $role->shortname;
+                $r->oldname = $role->name;
                 echo '<p>', get_string('new_role_created', 'report_rolesmigration', $r), '</p>';
                 break;
 

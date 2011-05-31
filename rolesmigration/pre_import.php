@@ -58,7 +58,8 @@ if (is_array($incoming_roles)) {
         $create_checked = (isset($actions[$role->shortname]) && 'create' == $actions[$role->shortname]) ? 'checked="checked"' : '';
         $replace_checked = (isset($actions[$role->shortname]) && 'replace' == $actions[$role->shortname]) ? 'checked="checked"' : '';
 
-        $new_value = isset($roles_to_create[$role->shortname]) ? $roles_to_create[$role->shortname] : $role->shortname;
+        $shortname_new_value = isset($roles_to_create[$role->shortname]['shortname']) ? $roles_to_create[$role->shortname]['shortname'] : $role->shortname;
+        $name_new_value = isset($roles_to_create[$role->shortname]['name']) ? $roles_to_create[$role->shortname]['name'] : $role->name;
 
         $options = '';
         $replace_options = '';
@@ -76,17 +77,18 @@ if (is_array($incoming_roles)) {
         }
 
         $row[2]  =   '<ul style="list-style-type: none;">';
-        $row[2] .=       '<li>';
-        $row[2] .=           '<input type="radio" '.$skip_checked.' id="skip'.$role->id.'" name="actions['.$role->shortname.']" value="skip" />';
+        $row[2] .=       '<li style="list-style-type: none;">';
+        $row[2] .=           '<input type="radio" '.$skip_checked.' id="skip'.$role->id.'" name="actions['.$role->shortname.']" value="skip" />&nbsp;';
         $row[2] .=           '<label for="skip'.$role->id.'">'.get_string('do_not_import', 'report_rolesmigration').'</label>';
         $row[2] .=       '</li>';
-        $row[2] .=       '<li>';
-        $row[2] .=           '<input type="radio" '.$create_checked.' id="create'.$role->id.'" name="actions['.$role->shortname.']" value="create" />';
+        $row[2] .=       '<li style="list-style-type: none;">';
+        $row[2] .=           '<input type="radio" '.$create_checked.' id="create'.$role->id.'" name="actions['.$role->shortname.']" value="create" />&nbsp;';
         $row[2] .=           '<label for="create'.$role->id.'">'.get_string('import_new', 'report_rolesmigration').'</label>';
-        $row[2] .=           '<input type="text" name="to_create['.$role->shortname.']" value="'.$new_value.'" />';
+        $row[2] .=           '<ul style="list-style-type: none;margin:0 0 0 35px;padding:0;"><li>'.get_string('shortname', 'report_rolesmigration').': <input type="text" name="to_create['.$role->shortname.'][shortname]" value="'.$shortname_new_value.'" /></li>';
+        $row[2] .=           '<li>'.get_string('name', 'report_rolesmigration').': <input type="text" name="to_create['.$role->shortname.'][name]" value="'.$name_new_value.'" /></li></ul>';
         $row[2] .=       '</li>';
-        $row[2] .=       '<li>';
-        $row[2] .=           '<input type="radio" '.$replace_checked.' id="replace'.$role->id.'" name="actions['.$role->shortname.']" value="replace" />';
+        $row[2] .=       '<li style="list-style-type: none;">';
+        $row[2] .=           '<input type="radio" '.$replace_checked.' id="replace'.$role->id.'" name="actions['.$role->shortname.']" value="replace" />&nbsp;';
         $row[2] .=           '<label for="replace'.$role->id.'">'.get_string('import_replacing', 'report_rolesmigration').'</label>';
         $row[2] .=           '<select name="to_replace['.$role->shortname.']" >'.$options.'</select>';
         $row[2] .=       '</li>';
