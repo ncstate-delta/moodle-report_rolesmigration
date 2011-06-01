@@ -34,6 +34,7 @@ $string['import_new']               = 'Import, creating new role with these valu
 $string['import_overrides']         = 'Import, allow overrides.';
 $string['import_replacing']         = 'Import, replacing with the selected existing role.';
 $string['importing']                = 'Importing';
+$string['link_to_define_roles']     = 'Now that your role is imported, you will need to visit the <a href="{$a}">Define Roles</a> page to set it up.';
 $string['name']                     = 'Display Name';
 $string['next_step']                = 'Next step';
 $string['new_role_created']         = 'New role created: {$a->newname} ({$a->newshort}) - Was originally: {$a->oldname} ({$a->oldshort})';

@@ -67,6 +67,8 @@ if (has_capability('moodle/restore:uploadfile', $context)) {
     switch ($import_stage) {
         case 'performing_import' :
             require_once(dirname(__FILE__).'/do-import.php');
+            $r = $CFG->wwwroot . '/' . $CFG->admin . '/roles/manage.php'; 
+            echo '<p>'.get_string('link_to_define_roles', 'report_rolesmigration', $r), '</p>';
             break;
         case 'uploading_import_file' :
         default :
