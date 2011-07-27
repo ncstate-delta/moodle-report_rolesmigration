@@ -17,36 +17,39 @@
 /**
  * Prints the Import Roles page along with appropriate forms and / or actions
  * @package   moodlerolesmigration
- * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu>
+ * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu> and others
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../../config.php');
+require_once((__FILE__).'../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('importroles_form.php');
+require_once((__FILE__).'importroles_form.php');
 require_once('lib.php');
 
-// Grab site course and coursecontext
-$course = clone($SITE);
-$context = get_context_instance(CONTEXT_SYSTEM, $course->id);   // Course context
+// Site context
+$context = get_context_instance(CONTEXT_SYSTEM);
+
+// Context id vars
 $contextid = $context->id;
 $filecontextid = optional_param('filecontextid', 0, PARAM_INT);
 
-// Import Stage
-$import_stage   = optional_param('import_stage', 'uploading_import_file', PARAM_ALPHAEXT);
-
-// file parameters
-// non js interface may require these parameters
+// File parameters needed by non js interface
 $component  = optional_param('component', null, PARAM_ALPHAEXT);
 $filearea   = optional_param('filearea', null, PARAM_ALPHAEXT);
 $itemid     = optional_param('itemid', null, PARAM_INT);
 $filepath   = optional_param('filepath', null, PARAM_PATH);
 $filename   = optional_param('filename', null, PARAM_FILE);
 
-list($context, $course, $cm) = get_context_info_array($contextid);
+// Parameters from import configuration
+$roles_to_create = optional_param('to_create', array(), PARAM_RAW);
+$roles_to_replace = optional_param('to_replace', array(), PARAM_RAW);
+$roles = array('create'=>$roles_to_create,'replace'=>$roles_to_replace);
+$actions = optional_param('actions',array(), PARAM_RAW);
 
-//require_login($course, false, $cm);
+// Require user to be logged in with permission to manage roles
+require_login();
 require_capability('moodle/role:manage', $context);
+require_capability('moodle/restore:uploadfile', $context);
 admin_externalpage_setup('importroles');
 
 // check if tmp dir exists
@@ -55,27 +58,29 @@ if (!check_dir_exists($tmpdir, true, true)) {
     throw new restore_controller_exception('cannot_create_backup_temp_dir');
 }
 
+// Print the page header
 echo $OUTPUT->header();
 
-// require uploadfile cap to use file picker
-if (has_capability('moodle/restore:uploadfile', $context)) {
-    echo $OUTPUT->heading(get_string('importfile', 'backup'));
-    echo $OUTPUT->container_start();
+// Print the page heading
+echo $OUTPUT->heading(get_string('importroles','report_rolesmigration'));
+echo $OUTPUT->container_start();
 
-    // Delegate form steps
-    switch ($import_stage) {
-        case 'performing_import' :
-            require_once(dirname(__FILE__).'/do-import.php');
-            $r = $CFG->wwwroot . '/' . $CFG->admin . '/roles/manage.php'; 
-            echo '<p>'.get_string('link_to_define_roles', 'report_rolesmigration', $r), '</p>';
-            break;
-        case 'uploading_import_file' :
-        default :
-          require_once(dirname(__FILE__).'/upload.php');
-          break;
-    }
-
-    echo $OUTPUT->container_end();
+// Print the error message if one is present
+if(isset($errormsg)){
+    echo "<div>$errormsg</div>";
 }
 
+// Print the form
+$mform = new import_roles_form(null, array('roles'=>$roles, 'actions'=>$actions));
+if($mform->is_validated()){
+    require_once(dirname(__FILE__).'/do-import.php');
+    $r = $CFG->wwwroot . '/' . $CFG->admin . '/roles/manage.php';
+    echo '<p>'.get_string('link_to_define_roles', 'report_rolesmigration', $r), '</p>';
+}else{
+    $mform->display();
+}
+
+// Print the end of the page
+echo $OUTPUT->container_end();
 echo $OUTPUT->footer();
+

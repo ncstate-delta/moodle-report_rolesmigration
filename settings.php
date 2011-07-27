@@ -22,7 +22,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-global $SITE;
 
 // Build new admin page object for IMPORT ROLES
 $importobject = new admin_externalpage(
@@ -40,6 +39,6 @@ $exportobject = new admin_externalpage(
                         'moodle/site:config'
                         );
 
-// Register new admin page object under reports
+// Register new admin page object under User -> Roles
 $ADMIN->add('roles', $importobject);
 $ADMIN->add('roles', $exportobject);

@@ -17,9 +17,11 @@
 /**
  * The form for the export roles process.
  * @package   moodlerolesmigration
- * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu>
+ * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu> and others
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir.'/formslib.php');
 
 class export_roles_form extends moodleform {
@@ -27,42 +29,36 @@ class export_roles_form extends moodleform {
         $mform =& $this->_form;
         $contextid = $this->_customdata['contextid'];
 
-        $mform->addElement('hidden', 'export', ''); // Will be overwritten below
+        $export = $mform->addElement('hidden', 'export', ''); // Will be overwritten below
 
         $table = new html_table();
-        $table->tablealign = 'center';
-        $table->align = array('right', 'left', 'left', 'left');
+        /* Styling done using HTML table and CSS */
+        $table->attributes['class'] = 'export_form_table';
+        $table->align = array('left', 'left', 'left', 'center');
         $table->wrap = array('nowrap', '', 'nowrap', 'nowrap');
-        $table->cellpadding = 5;
-        $table->cellspacing = 0;
-        $table->width = '90%';
         $table->data = array();
 
         $table->head = array(get_string('name'),
-        get_string('description'),
-        get_string('shortname'),
-        get_string('export', 'report_rolesmigration'));
+                            get_string('description'),
+                            get_string('shortname'),
+                            get_string('export', 'report_rolesmigration'));
 
         $roles = get_all_roles();
         foreach ($roles as $role) {
+            $row = array();
+            $roleurl = new moodle_url('/admin/roles/define.php', array('roleid' => $role->id, 'action' => 'view'));
+            $row[0] = '<a href="'.$roleurl.'">'.format_string($role->name).'</a>';
+            $row[1] = format_text($role->description, FORMAT_HTML);
+            $row[2] = ($role->shortname);
+            /* Export values are added from role checkboxes */
+            $row[3] = '<input type="checkbox" name="export[]" value="'.$role->shortname.'" />';
 
-        $row = array();
-        $roleurl = new moodle_url('/admin/roles/define.php', array('roleid' => $role->id, 'action' => 'view'));
-        $row[0] = '<a href="'.$roleurl.'">'.format_string($role->name).'</a>';
-        $row[1] = format_text($role->description, FORMAT_HTML);
-        $row[2] = ($role->shortname);
-        //$row[3] = $mform->addElement('checkbox', 'export[]', '', '', array('value' => $role->shortname));
-        $row[3] = '<input type="checkbox" name="export[]" value="'.$role->shortname.'" />';
-
-        $table->data[] = $row;
+            $table->data[] = $row;
         }
 
-        $table = html_writer::table($table);
-                                                   
-        $mform->addElement('html', $table);
+        $mform->addElement('html', html_writer::table($table));
         $mform->addElement('hidden', 'contextid', $contextid);
-        $mform->addElement('hidden', 'action', 'export');
-        $submit_string = get_string('export', 'report_rolesmigration');
-        $this->add_action_buttons(false, $submit_string);
+        $this->add_action_buttons(false, get_string('submitexport', 'report_rolesmigration'));
     }
 }
+

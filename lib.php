@@ -16,7 +16,7 @@
 
 /**
  * @package   moodlerolesmigration
- * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu>
+ * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu> and others
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -54,7 +54,7 @@ function report_rolesmigration_pluginfile($course, $cm, $context, $filearea, $ar
 }
 
 /**
-* Parses uploaded file (or POST args for xml roles
+* Parses uploaded file (or POST args) for xml roles
 */
 function roles_migration_get_incoming_roles($xml=false) {
     global $USER;
@@ -92,5 +92,72 @@ function roles_migration_get_incoming_roles($xml=false) {
         return $to_return;
     }
     return false;
+}
+
+function import_config_table($xml, $roles_to_create, $actions){
+    global $DB;
+
+    // Existing roles in this installation
+    $existing_roles = $DB->get_records('role');
+    $incoming_roles = roles_migration_get_incoming_roles($xml);
+
+    $table = new html_table();
+    $table->attributes['class'] = 'import_form_table';
+    $table->align = array('right', 'left', 'left', 'left');
+    $table->wrap = array('nowrap', '', 'nowrap', 'nowrap');
+    $table->data = array();
+    $table->head = array(get_string('name'), get_string('shortname'),
+    get_string('action'));
+    if (! is_array($incoming_roles)) {
+        echo get_string('no_roles_in_import', 'report_rolesmigration');
+        return;
+    }
+    foreach ($incoming_roles as $role) {
+        $row = array();
+        $row[0] = $role->name;
+        $row[1] = $role->shortname;
+
+        $create_checked = (isset($actions[$role->shortname]) && 'create' == $actions[$role->shortname]) ? 'checked="checked"' : '';
+        $replace_checked = (isset($actions[$role->shortname]) && 'replace' == $actions[$role->shortname]) ? 'checked="checked"' : '';
+        $skip_checked = (empty($create_checked) && empty($replace_checked) ) ? 'checked="checked"' : ''; 
+
+        $shortname_new_value = isset($roles_to_create[$role->shortname]['shortname']) ? $roles_to_create[$role->shortname]['shortname'] : $role->shortname;
+        $name_new_value = isset($roles_to_create[$role->shortname]['name']) ? $roles_to_create[$role->shortname]['name'] : $role->name;
+
+        $options = '';
+        $replace_options = '';
+        foreach ($existing_roles as $er) {
+            if (isset($incoming_roles[$role->shortname])) {
+                if ($incoming_roles[$role->shortname] == $er->shortname) {
+                    $selected = ' selected="selected" ';
+                }
+            } elseif ($role->shortname == $er->shortname) {
+                $selected = ' selected="selected" ';
+            } else {
+                $selected = '';
+            }
+            $options .= "<option {$selected} value=\"{$er->shortname}\"> {$er->name} ({$er->shortname})</option>";
+        }
+        $row[2] = '<ul style="list-style-type: none;">';
+        $row[2] .= '<li style="list-style-type: none;">';
+        $row[2] .= '<input type="radio" ' . $skip_checked . ' id="skip' . $role->id . '" name="actions[' . $role->shortname . ']" value="skip" />&nbsp;';
+        $row[2] .= '<label for="skip' . $role->id . '">' . get_string('do_not_import', 'report_rolesmigration') . '</label>';
+        $row[2] .= '</li>';
+        $row[2] .= '<li style="list-style-type: none;">';
+        $row[2] .= '<input type="radio" ' . $create_checked . ' id="create' . $role->id . '" name="actions[' . $role->shortname . ']" value="create" />&nbsp;';
+        $row[2] .= '<label for="create' . $role->id . '">' . get_string('import_new', 'report_rolesmigration') . '</label>';
+        $row[2] .= '<ul style="list-style-type: none;margin:0 0 0 35px;padding:0;"><li>' . get_string('shortname', 'report_rolesmigration') . ': <input type="text" name="to_create[' . $role->shortname . '][shortname]" value="' . $shortname_new_value . '" /></li>';
+        $row[2] .= '<li>' . get_string('name', 'report_rolesmigration') . ': <input type="text" name="to_create[' . $role->shortname . '][name]" value="' . $name_new_value . '" /></li></ul>';
+        $row[2] .= '</li>';
+        $row[2] .= '<li style="list-style-type: none;">';
+        $row[2] .= '<input type="radio" ' . $replace_checked . ' id="replace' . $role->id . '" name="actions[' . $role->shortname . ']" value="replace" />&nbsp;';
+        $row[2] .= '<label for="replace' . $role->id . '">' . get_string('import_replacing', 'report_rolesmigration') . '</label>';
+        $row[2] .= '<select name="to_replace[' . $role->shortname . ']" >' . $options . '</select>';
+        $row[2] .= '</li>';
+        $row[2] .= '</ul>';
+        $table->data[] = $row;
+    }
+
+    return $table;
 }
 ?>

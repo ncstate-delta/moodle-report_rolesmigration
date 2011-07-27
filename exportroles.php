@@ -17,24 +17,20 @@
 /**
  * Prints the Export Roles page along with appropriate forms and / or actions.
  * @package   moodlerolesmigration
- * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu>
+ * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu> and others
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../../config.php');
+require_once(dirname(__FILE__).'/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('exportroles_form.php');
+require_once(dirname(__FILE__).'/exportroles_form.php');
 
-// Grab site course and course context
-$course = clone($SITE);
-$context = get_context_instance(CONTEXT_SYSTEM, $course->id);
+// Site context
+$context = get_context_instance(CONTEXT_SYSTEM);
 
 // Set context ID vars
 $contextid = $context->id;
 $filecontextid = optional_param('filecontextid', 0, PARAM_INT);
-
-// Set action from URL params
-$action = optional_param('action', '', PARAM_ALPHA);
 
 // File parameters needed by non js interface 
 $component  = optional_param('component', null, PARAM_ALPHAEXT);
@@ -42,8 +38,6 @@ $filearea   = optional_param('filearea', null, PARAM_ALPHAEXT);
 $itemid     = optional_param('itemid', null, PARAM_INT);
 $filepath   = optional_param('filepath', null, PARAM_PATH);
 $filename   = optional_param('filename', null, PARAM_FILE);
-
-list($context, $course, $cm) = get_context_info_array($contextid);
 
 // Require user to be logged in with permission to manage roles
 require_login();
@@ -55,15 +49,11 @@ $form = new export_roles_form(null, array('contextid'=>$contextid));
 
 // Process the form if it has been submitted
 $data = $form->get_data();
-if ($data && 'export' == $action) {
-    // If we don't have a role selected, abandon export and print error message.
-    // Doing it manually until I determine if I can use formlib and html_table together in rolesexport_form.php
-    if (!empty($data->export)) {
-       // This file processes the export and delivers the XML file 
-       include_once('do-export.php'); 
-    } else {
-        $errormsg = 'Please select at least one role to export';
-    }
+if ($data && !empty($data->export)){
+    // This file processes the export and delivers the XML file 
+    include_once('do-export.php'); 
+}elseif($form->is_submitted()){
+    $errormsg = get_string('error_noselect', 'report_rolesmigration');
 }
 
 // Print the page header
