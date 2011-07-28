@@ -25,7 +25,7 @@
 
 $capabilities = array(
 
-    'report/rolesmigration:view' => array(
+    'local/rolesmigration:view' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
