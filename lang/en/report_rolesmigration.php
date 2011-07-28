@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'report_rolesmigration', language 'en', branch 'MOODLE_20_STABLE'
+ * Strings for component 'local_rolesmigration', language 'en', branch 'MOODLE_20_STABLE'
  * @package   moodlerolesmigration
  * @copyright 2011 NCSU DELTA | <http://delta.ncsu.edu> and others
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

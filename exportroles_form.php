@@ -41,7 +41,7 @@ class export_roles_form extends moodleform {
         $table->head = array(get_string('name'),
                             get_string('description'),
                             get_string('shortname'),
-                            get_string('export', 'report_rolesmigration'));
+                            get_string('export', 'local_rolesmigration'));
 
         $roles = get_all_roles();
         foreach ($roles as $role) {
@@ -58,7 +58,7 @@ class export_roles_form extends moodleform {
 
         $mform->addElement('html', html_writer::table($table));
         $mform->addElement('hidden', 'contextid', $contextid);
-        $this->add_action_buttons(false, get_string('submitexport', 'report_rolesmigration'));
+        $this->add_action_buttons(false, get_string('submitexport', 'local_rolesmigration'));
     }
 }
 

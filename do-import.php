@@ -26,13 +26,13 @@ defined('MOODLE_INTERNAL') || die;
 if ($roles_in_file = roles_migration_get_incoming_roles()) {
     foreach ($roles_in_file as $role) {
         if (!isset($actions[$role->shortname])) {
-            echo '<p>', get_string('role_ignored', 'report_rolesmigration', $role), '</p>';
+            echo '<p>', get_string('role_ignored', 'local_rolesmigration', $role), '</p>';
             continue;
         }
         
         switch ($actions[$role->shortname]) {
             case 'skip':
-                echo '<p>', get_string('role_ignored', 'report_rolesmigration', $role), '</p>';
+                echo '<p>', get_string('role_ignored', 'local_rolesmigration', $role), '</p>';
                 break;
             case 'create':
                 if (!array_key_exists($role->shortname, $roles['create'])) {
@@ -90,7 +90,7 @@ if ($roles_in_file = roles_migration_get_incoming_roles()) {
                 $r->newname = $currentfullname;
                 $r->oldshort = $role->shortname;
                 $r->oldname = $role->name;
-                echo '<p>', get_string('new_role_created', 'report_rolesmigration', $r), '</p>';
+                echo '<p>', get_string('new_role_created', 'local_rolesmigration', $r), '</p>';
                 break;
 
             case 'replace':
@@ -149,14 +149,14 @@ if ($roles_in_file = roles_migration_get_incoming_roles()) {
                 $r = new stdClass();
                 $r->new = $existing_role;
                 $r->replaced = $role->shortname;
-                echo '<p>', get_string('role_replaced', 'report_rolesmigration', $r), '</p>';
+                echo '<p>', get_string('role_replaced', 'local_rolesmigration', $r), '</p>';
                 break;
 
             default:
                 $a = new stdClass();
                 $a->action = $actions[$role->shortname];
                 $a->shortname = $role->shortname;
-                echo '<p>', get_string('unknown_import_action', 'report_rolesmigration', $a), '</p>';
+                echo '<p>', get_string('unknown_import_action', 'local_rolesmigration', $a), '</p>';
         }
     }
 }

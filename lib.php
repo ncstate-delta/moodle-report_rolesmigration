@@ -31,11 +31,11 @@
  * @param bool $forcedownload
  * @return bool false if file not found, does not return if found - just send the file
  */
-function report_rolesmigration_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+function local_rolesmigration_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
     global $USER;
     //require_capability('mod/assignment:view', $this->context);
 
-    $fullpath = "/{$context->id}/report_rolesmigration/$filearea/".implode('/', $args);
+    $fullpath = "/{$context->id}/local_rolesmigration/$filearea/".implode('/', $args);
     
     $fs = get_file_storage();
     if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
@@ -109,7 +109,7 @@ function import_config_table($xml, $roles_to_create, $actions){
     $table->head = array(get_string('name'), get_string('shortname'),
     get_string('action'));
     if (! is_array($incoming_roles)) {
-        echo get_string('no_roles_in_import', 'report_rolesmigration');
+        echo get_string('no_roles_in_import', 'local_rolesmigration');
         return;
     }
     foreach ($incoming_roles as $role) {
@@ -141,17 +141,17 @@ function import_config_table($xml, $roles_to_create, $actions){
         $row[2] = '<ul style="list-style-type: none;">';
         $row[2] .= '<li style="list-style-type: none;">';
         $row[2] .= '<input type="radio" ' . $skip_checked . ' id="skip' . $role->id . '" name="actions[' . $role->shortname . ']" value="skip" />&nbsp;';
-        $row[2] .= '<label for="skip' . $role->id . '">' . get_string('do_not_import', 'report_rolesmigration') . '</label>';
+        $row[2] .= '<label for="skip' . $role->id . '">' . get_string('do_not_import', 'local_rolesmigration') . '</label>';
         $row[2] .= '</li>';
         $row[2] .= '<li style="list-style-type: none;">';
         $row[2] .= '<input type="radio" ' . $create_checked . ' id="create' . $role->id . '" name="actions[' . $role->shortname . ']" value="create" />&nbsp;';
-        $row[2] .= '<label for="create' . $role->id . '">' . get_string('import_new', 'report_rolesmigration') . '</label>';
-        $row[2] .= '<ul style="list-style-type: none;margin:0 0 0 35px;padding:0;"><li>' . get_string('shortname', 'report_rolesmigration') . ': <input type="text" name="to_create[' . $role->shortname . '][shortname]" value="' . $shortname_new_value . '" /></li>';
-        $row[2] .= '<li>' . get_string('name', 'report_rolesmigration') . ': <input type="text" name="to_create[' . $role->shortname . '][name]" value="' . $name_new_value . '" /></li></ul>';
+        $row[2] .= '<label for="create' . $role->id . '">' . get_string('import_new', 'local_rolesmigration') . '</label>';
+        $row[2] .= '<ul style="list-style-type: none;margin:0 0 0 35px;padding:0;"><li>' . get_string('shortname', 'local_rolesmigration') . ': <input type="text" name="to_create[' . $role->shortname . '][shortname]" value="' . $shortname_new_value . '" /></li>';
+        $row[2] .= '<li>' . get_string('name', 'local_rolesmigration') . ': <input type="text" name="to_create[' . $role->shortname . '][name]" value="' . $name_new_value . '" /></li></ul>';
         $row[2] .= '</li>';
         $row[2] .= '<li style="list-style-type: none;">';
         $row[2] .= '<input type="radio" ' . $replace_checked . ' id="replace' . $role->id . '" name="actions[' . $role->shortname . ']" value="replace" />&nbsp;';
-        $row[2] .= '<label for="replace' . $role->id . '">' . get_string('import_replacing', 'report_rolesmigration') . '</label>';
+        $row[2] .= '<label for="replace' . $role->id . '">' . get_string('import_replacing', 'local_rolesmigration') . '</label>';
         $row[2] .= '<select name="to_replace[' . $role->shortname . ']" >' . $options . '</select>';
         $row[2] .= '</li>';
         $row[2] .= '</ul>';

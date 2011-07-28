@@ -26,16 +26,16 @@ defined('MOODLE_INTERNAL') || die;
 // Build new admin page object for IMPORT ROLES
 $importobject = new admin_externalpage(
                         'importroles',
-                        get_string('importroles', 'report_rolesmigration'),
-                        new moodle_url('/'.$CFG->admin.'/report/rolesmigration/importroles.php'),
+                        get_string('importroles', 'local_rolesmigration'),
+                        new moodle_url('/local/rolesmigration/importroles.php'),
                         'moodle/site:config'
                         );
 
 // Build new admin page object for EXPORT ROLES
 $exportobject = new admin_externalpage(
                         'exportroles',
-                        get_string('exportroles', 'report_rolesmigration'),
-                        new moodle_url('/'.$CFG->admin.'/report/rolesmigration/exportroles.php'),
+                        get_string('exportroles', 'local_rolesmigration'),
+                        new moodle_url('/local/rolesmigration/exportroles.php'),
                         'moodle/site:config'
                         );
 

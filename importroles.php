@@ -21,7 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once((__FILE__).'../../../config.php');
+require_once((__FILE__).'../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once((__FILE__).'importroles_form.php');
 require_once('lib.php');
@@ -53,7 +53,7 @@ require_capability('moodle/restore:uploadfile', $context);
 admin_externalpage_setup('importroles');
 
 // check if tmp dir exists
-$tmpdir = $CFG->dataroot . '/admin/report/rolesmigration/temp/';
+$tmpdir = $CFG->dataroot . '/local/rolesmigration/temp/';
 if (!check_dir_exists($tmpdir, true, true)) {
     throw new restore_controller_exception('cannot_create_backup_temp_dir');
 }
@@ -62,7 +62,7 @@ if (!check_dir_exists($tmpdir, true, true)) {
 echo $OUTPUT->header();
 
 // Print the page heading
-echo $OUTPUT->heading(get_string('importroles','report_rolesmigration'));
+echo $OUTPUT->heading(get_string('importroles','local_rolesmigration'));
 echo $OUTPUT->container_start();
 
 // Print the error message if one is present
@@ -75,7 +75,7 @@ $mform = new import_roles_form(null, array('roles'=>$roles, 'actions'=>$actions)
 if($mform->is_validated()){
     require_once(dirname(__FILE__).'/do-import.php');
     $r = $CFG->wwwroot . '/' . $CFG->admin . '/roles/manage.php';
-    echo '<p>'.get_string('link_to_define_roles', 'report_rolesmigration', $r), '</p>';
+    echo '<p>'.get_string('link_to_define_roles', 'local_rolesmigration', $r), '</p>';
 }else{
     $mform->display();
 }

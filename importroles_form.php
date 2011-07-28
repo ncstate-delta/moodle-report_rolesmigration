@@ -52,7 +52,7 @@ class import_roles_form extends moodleform {
         $errors = array();
 
         if(empty($this->_customdata['actions'])){
-            $errors['roles'] = get_string('error_noaction', 'report_rolesmigration');
+            $errors['roles'] = get_string('error_noaction', 'local_rolesmigration');
         }
 
         return $errors;
@@ -63,7 +63,7 @@ class import_roles_upload_form extends moodleform {
     function definition() {
         $mform =& $this->_form;
         $mform->addElement('filepicker', 'importfile', get_string('files'), null, array('accepted_types' => 'xml'));
-        $mform->addRule('importfile', get_string('error_nofile', 'report_rolesmigration'), 'required');
+        $mform->addRule('importfile', get_string('error_nofile', 'local_rolesmigration'), 'required');
 
         $this->add_action_buttons(false, get_string('next'));   // Submit button
     }
@@ -76,9 +76,9 @@ class import_roles_upload_form extends moodleform {
             $content = $file->get_content();
             $xml = xmlize($content);
             if(empty($content)){
-                $errors['importfile'] = get_string('error_emptyfile', 'report_rolesmigration');
+                $errors['importfile'] = get_string('error_emptyfile', 'local_rolesmigration');
             }else if(!$xml || !roles_migration_get_incoming_roles($xml)){
-                $errors['importfile'] = get_string('error_badxml', 'report_rolesmigration');
+                $errors['importfile'] = get_string('error_badxml', 'local_rolesmigration');
             }
         }
 

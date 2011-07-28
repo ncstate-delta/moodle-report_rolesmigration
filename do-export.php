@@ -42,10 +42,10 @@ $role_ids = array();
 $fileinfo = array(
     'userid'   => $USER->id,
     'contextid' => $sitecontext->id,
-    'component' => 'report_rolesmigration',
+    'component' => 'local_rolesmigration',
     'filearea' => 'backup',
     'itemid' => time(),
-    'filepath' => '/admin/report/rolesmigration/temp/',
+    'filepath' => '/local/rolesmigration/temp/',
     'filename' => 'rolesexport.xml'
 );
 
