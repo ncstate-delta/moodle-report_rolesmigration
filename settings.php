@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 $importobject = new admin_externalpage(
                         'importroles',
                         get_string('importroles', 'report_rolesmigration'),
-                        new moodle_url('/'.$CFG->admin.'/report/rolesmigration/importroles.php'),
+                        new moodle_url('/report/rolesmigration/importroles.php'),
                         'moodle/site:config'
                         );
 
@@ -35,7 +35,7 @@ $importobject = new admin_externalpage(
 $exportobject = new admin_externalpage(
                         'exportroles',
                         get_string('exportroles', 'report_rolesmigration'),
-                        new moodle_url('/'.$CFG->admin.'/report/rolesmigration/exportroles.php'),
+                        new moodle_url('/report/rolesmigration/exportroles.php'),
                         'moodle/site:config'
                         );
 

@@ -46,7 +46,7 @@ class export_roles_form extends moodleform {
         $roles = get_all_roles();
         foreach ($roles as $role) {
             $row = array();
-            $roleurl = new moodle_url('/admin/roles/define.php', array('roleid' => $role->id, 'action' => 'view'));
+            $roleurl = new moodle_url('/roles/define.php', array('roleid' => $role->id, 'action' => 'view'));
             $row[0] = '<a href="'.$roleurl.'">'.format_string($role->name).'</a>';
             $row[1] = format_text($role->description, FORMAT_HTML);
             $row[2] = ($role->shortname);

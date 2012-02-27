@@ -10,5 +10,10 @@ More discussion can be found at the following locations:
 * http://moodle.org/mod/forum/discuss.php?d=170622#p808007
 * http://tracker.moodle.org/browse/MDL-17081
 
+Known Issues:
+* In Moodle 2.2+ you will receive an error mentioning optional_param. See the following tracker issue for patch. Its a moodle core bug.
+** http://tracker.moodle.org/browse/MDL-31793
+
 == Changelog ==
+* Added the branch report_22 to work with Moodle 22
 * Multiple code updates to better align with Moodle coding standards. Props Nicholas Koeppen <nkoeppe@wisc.edu>
