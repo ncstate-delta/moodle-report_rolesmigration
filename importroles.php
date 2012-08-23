@@ -21,7 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(__FILE__).'/../../../config.php');
+require_once('../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once(dirname(__FILE__).'/importroles_form.php');
 require_once('lib.php');
@@ -40,11 +40,7 @@ $itemid     = optional_param('itemid', null, PARAM_INT);
 $filepath   = optional_param('filepath', null, PARAM_PATH);
 $filename   = optional_param('filename', null, PARAM_FILE);
 
-// Parameters from import configuration
-$roles_to_create = optional_param('to_create', array(), PARAM_RAW);
-$roles_to_replace = optional_param('to_replace', array(), PARAM_RAW);
-$roles = array('create'=>$roles_to_create,'replace'=>$roles_to_replace);
-$actions = optional_param('actions',array(), PARAM_RAW);
+$actions = optional_param_array('actions',array(), PARAM_RAW);
 
 // Require user to be logged in with permission to manage roles
 require_login();
@@ -71,8 +67,14 @@ if(isset($errormsg)){
 }
 
 // Print the form
+if (($data = data_submitted()) && (isset($data->to_create) || isset($data->to_replace))) {
+    $roles = array('create'=> $data->to_create,'replace'=>$data->to_replace);
+} else {
+    $roles = array('create' => array(), 'replace' => array());
+}
+
 $mform = new import_roles_form(null, array('roles'=>$roles, 'actions'=>$actions));
-if($mform->is_validated()){
+if ($mform->is_validated()) {
     require_once(dirname(__FILE__).'/do-import.php');
     $r = $CFG->wwwroot . '/' . $CFG->admin . '/roles/manage.php';
     echo '<p>'.get_string('link_to_define_roles', 'report_rolesmigration', $r), '</p>';
