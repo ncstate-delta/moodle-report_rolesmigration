@@ -71,15 +71,19 @@ if ($roles_in_file = roles_migration_get_incoming_roles()) {
 
                 // restore value of 'id' field for the role, if possible
                 if ($counter == 1) {
-                    // check if no role with given 'id' already exists
-                    $found_id = $DB->get_field("role", "id", array("id" => $role->id));
-                    if (empty($found_id)) {
-                        $sql = "UPDATE {role} SET id = :newid WHERE id = :oldid";
-                        $params = array('oldid'=> $role_id, 'newid' => $role->id);
-                        // update the role 'id' in DB
-                        $DB->execute($sql, $params);
-                        // update $role_id variable
-                        $role_id = $role->id;
+                    // continue only if value of exported 'id' is lower than current 'id' of newly created role
+                    // (avoid future PK autoincrement conflicts)
+                    if ($role->id < $role_id) {
+                        // now check if no role with given 'id' already exists
+                        $found_id = $DB->get_field("role", "id", array("id" => $role->id));
+                        if (empty($found_id)) {
+                            $sql = "UPDATE {role} SET id = :xmlid WHERE id = :curid";
+                            $params = array('xmlid' => $role->id, 'curid'=> $role_id);
+                            // update the role 'id' in DB
+                            $DB->execute($sql, $params);
+                            // update $role_id variable
+                            $role_id = $role->id;
+                        }
                     }
                 }
 
