@@ -66,7 +66,7 @@ function roles_migration_get_incoming_roles($xml=false) {
                 $role_capabilities  = array();
                 $role_contextlevels = array();
                 // Add capabilities for role
-                if (isset($value['#']['ROLE_CAPABILITIES'])) {
+                if (isset($value['#']['ROLE_CAPABILITIES'][0]['#']['ROLE_CAPABILITY'])) {
                     foreach($value['#']['ROLE_CAPABILITIES'][0]['#']['ROLE_CAPABILITY'] as $rck => $rcv) {
                         $capability = new stdClass();
                         $capability->contextid      = !empty($rcv['#']['CONTEXTID']) ? $rcv['#']['CONTEXTID'][0]['#'] : '';
@@ -76,7 +76,7 @@ function roles_migration_get_incoming_roles($xml=false) {
                     }
                 }
                 // Add context levels for role
-                if (isset($value['#']['ROLE_CONTEXTLEVELS'])) {
+                if (isset($value['#']['ROLE_CONTEXTLEVELS'][0]['#']['ROLE_CONTEXTLEVEL'])) {
                     foreach($value['#']['ROLE_CONTEXTLEVELS'][0]['#']['ROLE_CONTEXTLEVEL'] as $rck => $rcv) {
                         $contextlvl = new stdClass();
                         $contextlvl->contextlevel   = !empty($rcv['#']['CONTEXTLEVEL']) ? $rcv['#']['CONTEXTLEVEL'][0]['#'] : '';
