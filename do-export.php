@@ -95,7 +95,7 @@ $xml->begin_tag('MOODLE_ROLES_MIGRATION');
                     // The ROLE_CAPABILITIES tag contains data from the role_capabilities table associated with selected ROLES
                     $xml->begin_tag('ROLE_CAPABILITIES');
                         // Loop through provided role  IDs
-                        if ($rolecaps = $DB->get_records('role_capabilities', array('contextid' => $sitecontext->id, 'roleid' => end($role_ids)))) {
+                        if ($rolecaps = $DB->get_records('role_capabilities', array('contextid' => $sitecontext->id, 'roleid' => end($role_ids)), 'capability ASC', 'id, contextid, roleid, capability, permission')) {
                             foreach( $rolecaps as $key => $cap ) {
                                 $cap_array = (array) $cap;
                                 // Loop through columns and create tag for each one
@@ -103,6 +103,9 @@ $xml->begin_tag('MOODLE_ROLES_MIGRATION');
                                 if ( in_array($cap->roleid, $role_ids)) {
                                     $xml->begin_tag('ROLE_CAPABILITY');
                                     foreach ($cap_array as $field => $value) {
+                                        if ( 'id' == $field ) {
+                                            continue;
+                                        }
                                         $xml->full_tag(strtoupper($field), $value);
                                     }
                                     $xml->end_tag('ROLE_CAPABILITY');
